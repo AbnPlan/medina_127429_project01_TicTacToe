@@ -121,6 +121,52 @@ def getBlock(mouse_click):
     elif mouse_click.getX() < 402 and mouse_click.getY() < 402:
         return 8
 
+def computerAi(master_board, boardX, boardO):
+    possible_moves = [x for x, space in enumerate(master_board) if space == False]
+    
+    for i in possible_moves:
+        board_copy = boardO[:]
+        board_copy[i] = True
+        if win_condition(board_copy):
+            MOVE = i
+            return MOVE
+
+    for i in possible_moves:
+        board_copy = boardX[:]
+        board_copy[i] = True
+        if win_condition(board_copy):
+            MOVE = i
+            return MOVE
+
+    open_corners = []
+    for i in possible_moves:
+        if i in [0,2,6,8]:
+            open_corners.append(i)
+    if len(open_corners) > 0:
+        MOVE = selectRandom(open_corners)
+        return MOVE
+
+    if 4 in possible_moves:
+        MOVE = 5
+        return MOVE
+
+    open_edge = []
+    for i in possible_moves:
+        if i in [1,3,5,7]:
+            open_edge.append(i)
+    if len(open_edge) > 0:
+        MOVE = selectRandom(open_edge)
+        return MOVE
+    
+    return 0
+
+def selectRandom(li):
+    import random
+    ln = len(li)
+    r = random.randrange(0 , ln)
+
+    return li[r]
+
 #Check Win Condition
 def win_condition(board):
     if (
@@ -138,7 +184,6 @@ def win_condition(board):
 
 #Game Logic
 def game(window):
-    i = True
 
     true_board = [
         True, True, True,
@@ -171,38 +216,36 @@ def game(window):
         user_click = window.getMouse()
         block = getBlock(user_click)
 
-        #This has 2 functions, check if the spot the player is clicking is taken
-        #and to mark the taken spots for the draw condition
         if master_board[block] == False:
             master_board[block] = True
 
-            #Variable i starts as true so that the X player plays first
-            #and at the end, if player X does not meet the win condition
-            #i changes to false to let the O player play
-            if i:
-                drawX(window, block)
-                boardX[block] = True
+            drawX(window, block)
+            boardX[block] = True
 
-                if win_condition(boardX):
-                    Xwins = graphics.Text(graphics.Point(201,100), "X Wins!!!")
-                    Xwins.draw(window)
-                    end_messege(window)
-                    return 0
-                i = False
+            if win_condition(boardX):
+                Xwins = graphics.Text(graphics.Point(201,100), "X Wins!!!")
+                Xwins.draw(window)
+                end_messege(window)
+                return 0
+            if master_board == true_board:
+                is_draw = graphics.Text(graphics.Point(201,100), "It's a Draw")
+                is_draw.draw(window)
+                end_messege(window)
+                return 0
+            
+            computer_move = computerAi(master_board, boardX, boardO)
+            drawO(window, computer_move)
+            boardO[computer_move] = True
+            master_board[computer_move] = True
 
-            #Same as the X player, and at the end, if the O player does not meet the win condition
-            #i changes to True to let the X player play
-            else:
-                drawO(window, block)
-                boardO[block] = True
-
-                if win_condition(boardO):
-                    Owins = graphics.Text(graphics.Point(201,100), "O Wins!!!")
-                    Owins.draw(window)
-                    end_messege(window)
-                    return 0
-                i = True
-
+            if win_condition(boardO):
+                Owins = graphics.Text(graphics.Point(201,100), "O Wins!!!")
+                Owins.draw(window)
+                end_messege(window)
+                return 0
+        print(boardO)
+        print(boardX)
+        print(master_board)
         #If the master board is full, the game ends in a draw
         if master_board == true_board:
             is_draw = graphics.Text(graphics.Point(201,100), "It's a Draw")
