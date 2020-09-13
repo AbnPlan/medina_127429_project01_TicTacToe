@@ -263,9 +263,6 @@ def game(window, score):
                 end_messege(window)
                 score[1] += 1
                 return 0
-        print(boardO)
-        print(boardX)
-        print(master_board)
         #If the master board is full, the game ends in a draw
         if master_board == true_board:
             is_draw = graphics.Text(graphics.Point(201,100), "It's a Draw")
