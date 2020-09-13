@@ -1,15 +1,35 @@
 import graphics
 
 def main():
-    window = set_board()
+    score = [0, 0]
+    play_again = 'y'
+    window = graphics.GraphWin('Tic-Tac-Toe', 402, 402, autoflush=False)
     first_message(window)
-    game(window)
+
+    while play_again == 'y' or play_again == 'Y':
+        set_board(window)
+        game(window, score)
+
+        clear(window)
+
+        game_score = graphics.Text(graphics.Point(201,201), f'{score[0]} - {score[1]}')
+        user_play_again = graphics.Text(graphics.Point(201,170), f'Press Y to play again, anything else to quit...')
+
+        game_score.draw(window)
+        user_play_again.draw(window)
+
+        play_again = window.getKey()
+
+        clear(window)
+    
+    window.close()
+
+
+
     
 
 #Creates the board
-def set_board():
-    #Create the window
-    window = graphics.GraphWin('Tic-Tac-Toe', 402, 402)
+def set_board(window):
 
     #The 4 lines that make up the board
     line1 = graphics.Line(graphics.Point(134, 0), graphics.Point(134, 402))
@@ -23,8 +43,6 @@ def set_board():
     line2.draw(window)
     line3.draw(window)
     line4.draw(window)
-
-    return window
 
 #Prints the first messege to greet the user
 def first_message(window):
@@ -183,7 +201,7 @@ def win_condition(board):
         return False
 
 #Game Logic
-def game(window):
+def game(window, score):
 
     true_board = [
         True, True, True,
@@ -226,6 +244,7 @@ def game(window):
                 Xwins = graphics.Text(graphics.Point(201,100), "X Wins!!!")
                 Xwins.draw(window)
                 end_messege(window)
+                score[0] += 1
                 return 0
             if master_board == true_board:
                 is_draw = graphics.Text(graphics.Point(201,100), "It's a Draw")
@@ -242,6 +261,7 @@ def game(window):
                 Owins = graphics.Text(graphics.Point(201,100), "O Wins!!!")
                 Owins.draw(window)
                 end_messege(window)
+                score[1] += 1
                 return 0
         print(boardO)
         print(boardX)
@@ -252,6 +272,11 @@ def game(window):
             is_draw.draw(window)
             end_messege(window)
             return 0
+
+def clear(window):
+    for item in window.items[:]:
+        item.undraw()
+    window.update()
 
 
 main()
