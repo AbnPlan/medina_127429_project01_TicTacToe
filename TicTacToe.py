@@ -165,7 +165,7 @@ def computerAi(master_board, boardX, boardO):
         return MOVE
 
     if 4 in possible_moves:
-        MOVE = 5
+        MOVE = 4
         return MOVE
 
     open_edge = []
