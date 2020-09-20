@@ -1,4 +1,4 @@
-###Hector A. Medina Torres  127429  
+### Hector A. Medina Torres  127429  
 # TicTacToe
 Personal TicTacToe project  
   
