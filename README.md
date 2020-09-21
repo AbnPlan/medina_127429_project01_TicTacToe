@@ -24,4 +24,8 @@ This loop of the user and the CPU is going to keep going until one of three cond
 
 Whenever one of the conditions are met, a messege will display, telling the user who won or it was a draw. When the user clicks on the screen, 
 board is cleared and a messege is displayed showing the current scores and asking the user if he wants to continue playing. If the user press
-'y' or 'Y' the board clears and the user can play again, otherwise, the game closes.
+'y' or 'Y' the board clears and the user can play again, otherwise, the game closes.  
+  
+  
+  Referencias:
+  https://www.youtube.com/watch?v=jAaJZLqryTI&t=836s - Idea para hacer el Ai
