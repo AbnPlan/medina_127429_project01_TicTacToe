@@ -27,5 +27,5 @@ board is cleared and a messege is displayed showing the current scores and askin
 'y' or 'Y' the board clears and the user can play again, otherwise, the game closes.  
   
   
-  Referencias:
+  Referencias:  
   https://www.youtube.com/watch?v=jAaJZLqryTI&t=836s - Idea para hacer el Ai
