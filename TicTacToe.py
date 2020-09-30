@@ -1,54 +1,38 @@
 import graphics
 
 def main():
-    score = [0, 0]
-    play_again = 'y'
     window = graphics.GraphWin('Tic-Tac-Toe', 402, 402, autoflush=False)
-    first_message(window)
-
-    while play_again == 'y' or play_again == 'Y':
-        set_board(window)
-        game(window, score)
-
-        clear(window)
-
-        game_score = graphics.Text(graphics.Point(201,201), f'{score[0]} - {score[1]}')
-        user_play_again = graphics.Text(graphics.Point(201,170), f'Press Y to play again, anything else to quit...')
-
-        game_score.draw(window)
-        user_play_again.draw(window)
-
-        play_again = window.getKey()
-
-        clear(window)
-    
+    score = [0, 0]
+    start_message(window)
+    play_game(window, score)
     window.close()
 
 
 
-    
 
 #Creates the board
 def set_board(window):
+    #Set background to grey
+    window.setBackground("grey")
 
     #The 4 lines that make up the board
-    line1 = graphics.Line(graphics.Point(134, 0), graphics.Point(134, 402))
-    line2 = graphics.Line(graphics.Point(268, 0), graphics.Point(268, 402))
-    line3 = graphics.Line(graphics.Point(0, 134), graphics.Point(402, 134))
-    line4 = graphics.Line(graphics.Point(0, 268), graphics.Point(402, 268))
+    lines = [
+        graphics.Line(graphics.Point(134, 0), graphics.Point(134, 402)),
+        graphics.Line(graphics.Point(268, 0), graphics.Point(268, 402)),
+        graphics.Line(graphics.Point(0, 134), graphics.Point(402, 134)),
+        graphics.Line(graphics.Point(0, 268), graphics.Point(402, 268))
+    ]
 
-    #Draws the board on a grey background
-    window.setBackground("grey")
-    line1.draw(window)
-    line2.draw(window)
-    line3.draw(window)
-    line4.draw(window)
+    #Draw all the lines in the list
+    [i.draw(window) for i in lines]
 
 #Prints the first messege to greet the user
-def first_message(window):
-    starting_messege = graphics.Text(graphics.Point(201,201), "Hello, click anywhere to start.")
+def start_message(window):
+    starting_messege = graphics.Text(graphics.Point(201,201), "Press any key to start...")
     starting_messege.draw(window)
-    window.getMouse()
+
+    window.getKey()
+
     starting_messege.undraw()
 
 #Prints goodby messege
@@ -57,45 +41,87 @@ def end_messege(window):
     end_messege.draw(window)
     window.getMouse()
 
+#Get working block
+def getBlock(mouse_click):
+    if mouse_click.getX() < 134 and mouse_click.getY() < 134:
+        return 0
+    elif mouse_click.getX() < 268 and mouse_click.getY() < 134:
+        return 1
+    elif mouse_click.getX() < 402 and mouse_click.getY() < 134:
+        return 2
+    elif mouse_click.getX() < 134 and mouse_click.getY() < 268:
+        return 3
+    elif mouse_click.getX() < 268 and mouse_click.getY() < 268:
+        return 4
+    elif mouse_click.getX() < 402 and mouse_click.getY() < 268:
+        return 5
+    elif mouse_click.getX() < 134 and mouse_click.getY() < 402:
+        return 6
+    elif mouse_click.getX() < 268 and mouse_click.getY() < 402:
+        return 7
+    elif mouse_click.getX() < 402 and mouse_click.getY() < 402:
+        return 8
 
 #Print X
 def drawX(window, block):
 
     if block == 0:
-        line1 = graphics.Line(graphics.Point(0,0), graphics.Point(134,134))
-        line2 = graphics.Line(graphics.Point(0,134), graphics.Point(134,0))
-    elif block == 1:
-        line1 = graphics.Line(graphics.Point(134,0), graphics.Point(268,134))
-        line2 = graphics.Line(graphics.Point(134,134), graphics.Point(268,0))
-    elif block == 2:
-        line1 = graphics.Line(graphics.Point(268,0), graphics.Point(402,134))
-        line2 = graphics.Line(graphics.Point(268,134), graphics.Point(402,0))
-    elif block == 3:
-        line1 = graphics.Line(graphics.Point(0,134), graphics.Point(134,268))
-        line2 = graphics.Line(graphics.Point(0,268), graphics.Point(134,134))
-    elif block == 4:
-        line1 = graphics.Line(graphics.Point(134,134), graphics.Point(268,268))
-        line2 = graphics.Line(graphics.Point(134,268), graphics.Point(268,134))
-    elif block == 5:
-        line1 = graphics.Line(graphics.Point(268,134), graphics.Point(402,268))
-        line2 = graphics.Line(graphics.Point(268,268), graphics.Point(402,134))
-    elif block == 6:
-        line1 = graphics.Line(graphics.Point(0,268), graphics.Point(134,402))
-        line2 = graphics.Line(graphics.Point(0,402), graphics.Point(134,268))
-    elif block == 7:
-        line1 = graphics.Line(graphics.Point(134,268), graphics.Point(268,402))
-        line2 = graphics.Line(graphics.Point(134,402), graphics.Point(268,268))
-    elif block == 8:
-        line1 = graphics.Line(graphics.Point(268,268), graphics.Point(402,402))
-        line2 = graphics.Line(graphics.Point(268,402), graphics.Point(402,268))
+        lines = [
+            graphics.Line(graphics.Point(0,0), graphics.Point(134,134)),
+            graphics.Line(graphics.Point(0,134), graphics.Point(134,0))
+        ]
 
-    line1.draw(window)
-    line2.draw(window)
+    elif block == 1:
+        lines = [
+            graphics.Line(graphics.Point(134,0), graphics.Point(268,134)),
+            graphics.Line(graphics.Point(134,134), graphics.Point(268,0))
+        ]
+        
+    elif block == 2:
+        lines = [
+            graphics.Line(graphics.Point(268,0), graphics.Point(402,134)),
+            graphics.Line(graphics.Point(268,134), graphics.Point(402,0))
+        ]
+
+    elif block == 3:
+        lines = [
+            graphics.Line(graphics.Point(0,134), graphics.Point(134,268)),
+            graphics.Line(graphics.Point(0,268), graphics.Point(134,134))
+        ]
+
+    elif block == 4:
+        lines = [
+            graphics.Line(graphics.Point(134,134), graphics.Point(268,268)),
+            graphics.Line(graphics.Point(134,268), graphics.Point(268,134))
+        ]
+
+    elif block == 5:
+        lines = [
+            graphics.Line(graphics.Point(268,134), graphics.Point(402,268)),
+            graphics.Line(graphics.Point(268,268), graphics.Point(402,134))
+        ]
+
+    elif block == 6:
+        lines = [
+            graphics.Line(graphics.Point(0,268), graphics.Point(134,402)),
+            graphics.Line(graphics.Point(0,402), graphics.Point(134,268))
+        ]
+
+    elif block == 7:
+        lines = [
+            graphics.Line(graphics.Point(134,268), graphics.Point(268,402)),
+            graphics.Line(graphics.Point(134,402), graphics.Point(268,268))
+        ]
+    elif block == 8:
+        lines = [
+            graphics.Line(graphics.Point(268,268), graphics.Point(402,402)),
+            graphics.Line(graphics.Point(268,402), graphics.Point(402,268))
+        ]
+
+    [i.draw(window) for i in lines]
 
 #Print O
 def drawO(window, block):
-    block_center = graphics.Point(0,0)
-
     if block == 0:
         block_center = graphics.Point(67, 67)
     elif block == 1:
@@ -118,28 +144,9 @@ def drawO(window, block):
     circle = graphics.Circle(block_center , 65)
     circle.draw(window)
     
-#Get working block
-def getBlock(mouse_click):
-    if mouse_click.getX() < 134 and mouse_click.getY() < 134:
-        return 0
-    elif mouse_click.getX() < 268 and mouse_click.getY() < 134:
-        return 1
-    elif mouse_click.getX() < 402 and mouse_click.getY() < 134:
-        return 2
-    if mouse_click.getX() < 134 and mouse_click.getY() < 268:
-        return 3
-    elif mouse_click.getX() < 268 and mouse_click.getY() < 268:
-        return 4
-    elif mouse_click.getX() < 402 and mouse_click.getY() < 268:
-        return 5
-    if mouse_click.getX() < 134 and mouse_click.getY() < 402:
-        return 6
-    elif mouse_click.getX() < 268 and mouse_click.getY() < 402:
-        return 7
-    elif mouse_click.getX() < 402 and mouse_click.getY() < 402:
-        return 8
 
-def computerAi(master_board, boardX, boardO):
+
+def cpu_move(master_board, boardX, boardO):
     possible_moves = [x for x, space in enumerate(master_board) if space == False]
     
     for i in possible_moves:
@@ -172,18 +179,18 @@ def computerAi(master_board, boardX, boardO):
     for i in possible_moves:
         if i in [1,3,5,7]:
             open_edge.append(i)
+
     if len(open_edge) > 0:
         MOVE = selectRandom(open_edge)
         return MOVE
-    
-    return 0
 
-def selectRandom(li):
+def selectRandom(open_spots):
     import random
-    ln = len(li)
-    r = random.randrange(0 , ln)
 
-    return li[r]
+    ln = len(open_spots)
+    random_move = random.randrange(0 , ln)
+
+    return open_spots[random_move]
 
 #Check Win Condition
 def win_condition(board):
@@ -199,6 +206,25 @@ def win_condition(board):
         return True
     else:
         return False
+
+def play_game(window, score):
+    play_again = 'y'
+
+    while play_again == 'y' or play_again == 'Y':
+        set_board(window)
+        game(window, score)
+
+        clear(window)
+
+        game_score = graphics.Text(graphics.Point(201,201), f'{score[0]} - {score[1]}')
+        user_play_again = graphics.Text(graphics.Point(201,170), f'Press Y to play again, anything else to quit...')
+
+        game_score.draw(window)
+        user_play_again.draw(window)
+
+        play_again = window.getKey()
+
+        clear(window)
 
 #Game Logic
 def game(window, score):
@@ -252,7 +278,7 @@ def game(window, score):
                 end_messege(window)
                 return 0
             
-            computer_move = computerAi(master_board, boardX, boardO)
+            computer_move = cpu_move(master_board, boardX, boardO)
             drawO(window, computer_move)
             boardO[computer_move] = True
             master_board[computer_move] = True
