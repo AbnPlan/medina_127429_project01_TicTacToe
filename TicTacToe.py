@@ -7,9 +7,6 @@ def main():
     play_game(window, score)
     window.close()
 
-
-
-
 #Creates the board
 def set_board(window):
     #Set background to grey
@@ -301,5 +298,5 @@ def clear(window):
         item.undraw()
     window.update()
 
-
-main()
+if __name__ == '__main__':
+    main()
