@@ -126,21 +126,42 @@ class Game():
         elif block == 8:
             block_center = Point(335, 335)
 
-        circle = Circle(block_center , 65)
-        circle.draw(self.window)
+        Circle(block_center , 65).draw(self.window)
     
-    def cpu_move(self, master_board, boardX, boardO):
-        possible_moves = [x for x, space in enumerate(master_board) if space == False]
+    def getBlock(self):
+        mouse_click = self.window.getMouse()
+
+        if mouse_click.getX() < 134 and mouse_click.getY() < 134:
+            return 0
+        elif mouse_click.getX() < 268 and mouse_click.getY() < 134:
+            return 1
+        elif mouse_click.getX() < 402 and mouse_click.getY() < 134:
+            return 2
+        elif mouse_click.getX() < 134 and mouse_click.getY() < 268:
+            return 3
+        elif mouse_click.getX() < 268 and mouse_click.getY() < 268:
+            return 4
+        elif mouse_click.getX() < 402 and mouse_click.getY() < 268:
+            return 5
+        elif mouse_click.getX() < 134 and mouse_click.getY() < 402:
+            return 6
+        elif mouse_click.getX() < 268 and mouse_click.getY() < 402:
+            return 7
+        elif mouse_click.getX() < 402 and mouse_click.getY() < 402:
+            return 8
+
+    def cpu_move(self):
+        possible_moves = [x for x, space in enumerate(self.master_board) if space == False]
         
         for i in possible_moves:
-            board_copy = boardO[:]
+            board_copy = self.boardO[:]
             board_copy[i] = True
             if self.win_condition(board_copy):
                 MOVE = i
                 return MOVE
 
         for i in possible_moves:
-            board_copy = boardX[:]
+            board_copy = self.boardX[:]
             board_copy[i] = True
             if self.win_condition(board_copy):
                 MOVE = i
@@ -188,13 +209,13 @@ class Game():
 
     def game(self):
         while True:
-            user_click = self.window.getMouse()
-            block = getBlock(user_click)
+            block = self.getBlock()
 
             if self.master_board[block] == False:
                 self.master_board[block] = True
-                self.drawX()
                 self.boardX[block] = True
+                self.drawX(block)
+                
 
                 if self.win_condition(self.boardX):
                     Text(Point(201,100), "X Wins!!!").draw(self.window)
@@ -202,14 +223,14 @@ class Game():
                     self.score[0] += 1
                     return 0
                 if self.master_board == self.true_board:
-                    Text(graphics.Point(201,100), "It's a Draw").draw(self.window)
+                    Text(Point(201,100), "It's a Draw").draw(self.window)
                     self.end_messege()
                     return 0
                 
                 computer_move = self.cpu_move()
                 self.drawO(computer_move)
                 self.boardO[computer_move] = True
-                master_board[computer_move] = True
+                self.master_board[computer_move] = True
 
                 if self.win_condition(self.boardO):
                     Text(Point(201,100), "O Wins!!!").draw(self.window)
@@ -229,13 +250,15 @@ class Game():
             self.board()
             self.game()
             self.clear()
-
-            game_score = Text(Point(201,201), f'{self.score[0]} - {self.score[1]}')
-            user_play_again = Text(Point(201,170), f'Press Y to play again, anything else to quit...')
-
-            game_score.draw(self.window)
-            user_play_again.draw(self.window)
+            Text(Point(201,201), f'{self.score[0]} - {self.score[1]}').draw(self.window)
+            Text(Point(201,170), f'Press Y to play again, anything else to quit...').draw(self.window)
 
             play_again = self.window.getKey()
-
+            
             self.clear()
+            self.true_board = [True] * 9
+            self.boardX = [False] * 9
+            self.boardO = [False] * 9
+            self.master_board = [False] * 9
+
+        
