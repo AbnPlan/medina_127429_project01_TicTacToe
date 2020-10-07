@@ -1,41 +1,25 @@
 from graphics import GraphWin, Line, Circle, Text, Point
 from random import randrange
 
-class Game():
+class Game(GraphWin):
     
     def __init__(self):
-        self.window = GraphWin('Tic-Tac-Toe', 402, 402, autoflush=False)
-
+        super().__init__('Tic-Tac-Toe', 402, 402, autoflush=False)
         self.score = [0,0]
-
         self.true_board = [True] * 9
         self.boardX = [False] * 9
         self.boardO = [False] * 9
         self.master_board = [False] * 9
 
-    def start_message(self):
-        starting_messege = Text(Point(201,201), "Press any key to start...")
-        starting_messege.draw(self.window)
-
-        self.window.getKey()
-
-        starting_messege.undraw()
-
-    #Prints goodby messege
-    def end_messege(self):
-        end_messege = Text(Point(201,201), "Thanks for playing!!!")
-        end_messege.draw(self.window)
-        self.window.getMouse()
-
     def clear(self):
-        for item in self.window.items[:]:
+        for item in self.items[:]:
             item.undraw()
 
-        self.window.update()
+        self.update()
     
     def board(self):
         #Set background to grey
-        self.window.setBackground("grey")
+        self.setBackground('grey')
 
         #The 4 lines that make up the board
         lines = [
@@ -46,7 +30,7 @@ class Game():
         ]
 
         #Draw all the lines in the list
-        [i.draw(self.window) for i in lines]
+        [i.draw(self) for i in lines]
 
     #Print X
     def drawX(self, block):
@@ -104,7 +88,7 @@ class Game():
                 Line(Point(268,402), Point(402,268))
             ]
 
-        [i.draw(self.window) for i in lines]
+        [i.draw(self) for i in lines]
 
     def drawO(self, block):
         if block == 0:
@@ -126,10 +110,10 @@ class Game():
         elif block == 8:
             block_center = Point(335, 335)
 
-        Circle(block_center , 65).draw(self.window)
+        Circle(block_center , 65).draw(self)
     
     def getBlock(self):
-        mouse_click = self.window.getMouse()
+        mouse_click = self.getMouse()
 
         if mouse_click.getX() < 134 and mouse_click.getY() < 134:
             return 0
@@ -218,14 +202,12 @@ class Game():
                 
 
                 if self.win_condition(self.boardX):
-                    Text(Point(201,100), "X Wins!!!").draw(self.window)
-                    self.end_messege()
+                    Text(Point(201,100), "X Wins!!!").draw(self)
                     self.score[0] += 1
-                    return 0
+                    break
                 if self.master_board == self.true_board:
-                    Text(Point(201,100), "It's a Draw").draw(self.window)
-                    self.end_messege()
-                    return 0
+                    Text(Point(201,100), "It's a Draw").draw(self)
+                    break
                 
                 computer_move = self.cpu_move()
                 self.drawO(computer_move)
@@ -233,15 +215,13 @@ class Game():
                 self.master_board[computer_move] = True
 
                 if self.win_condition(self.boardO):
-                    Text(Point(201,100), "O Wins!!!").draw(self.window)
-                    self.end_messege()
+                    Text(Point(201,100), "O Wins!!!").draw(self)
                     self.score[1] += 1
-                    return 0
+                    break
             #If the master board is full, the game ends in a draw
             if self.master_board == self.true_board:
                 Text(Point(201,100), "It's a Draw")
-                self.end_messege()
-                return 0
+                break
 
     def play_game(self):
         play_again = 'y'
@@ -250,10 +230,10 @@ class Game():
             self.board()
             self.game()
             self.clear()
-            Text(Point(201,201), f'{self.score[0]} - {self.score[1]}').draw(self.window)
-            Text(Point(201,170), f'Press Y to play again, anything else to quit...').draw(self.window)
+            Text(Point(201,201), f'{self.score[0]} - {self.score[1]}').draw(self)
+            Text(Point(201,170), f'Press Y to play again, anything else to quit...').draw(self)
 
-            play_again = self.window.getKey()
+            play_again = self.getKey()
             
             self.clear()
             self.true_board = [True] * 9
