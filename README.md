@@ -28,4 +28,4 @@ board is cleared and a messege is displayed showing the current scores and askin
   
   
   Referencias:  
-  https://www.youtube.com/watch?v=jAaJZLqryTI&t=836s - Idea para hacer el Ai
+  https://www.youtube.com/watch?v=jAaJZLqryTI&t=836s - Idea para hacer el CPU
