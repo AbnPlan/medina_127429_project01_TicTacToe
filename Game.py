@@ -5,11 +5,13 @@ class Game(GraphWin):
     
     def __init__(self):
         super().__init__('Tic-Tac-Toe', 402, 402, autoflush=False)
-        self.score = [0,0]
+        self.setBackground('grey')
+        self.score = [0] * 3
         self.true_board = [True] * 9
         self.boardX = [False] * 9
         self.boardO = [False] * 9
         self.master_board = [False] * 9
+        
 
     def clear(self):
         for item in self.items[:]:
@@ -18,9 +20,6 @@ class Game(GraphWin):
         self.update()
     
     def board(self):
-        #Set background to grey
-        self.setBackground('grey')
-
         #The 4 lines that make up the board
         lines = [
             Line(Point(134, 0), Point(134, 402)),
@@ -112,7 +111,7 @@ class Game(GraphWin):
 
         Circle(block_center , 65).draw(self)
     
-    def getBlock(self):
+    def get_block(self):
         mouse_click = self.getMouse()
 
         if mouse_click.getX() < 134 and mouse_click.getY() < 134:
@@ -156,7 +155,7 @@ class Game(GraphWin):
             if i in [0,2,6,8]:
                 open_corners.append(i)
         if len(open_corners) > 0:
-            MOVE = self.selectRandom(open_corners)
+            MOVE = self.select_random(open_corners)
             return MOVE
 
         if 4 in possible_moves:
@@ -169,10 +168,14 @@ class Game(GraphWin):
                 open_edge.append(i)
 
         if len(open_edge) > 0:
-            MOVE = self.selectRandom(open_edge)
+            MOVE = self.select_random(open_edge)
             return MOVE
+        
+    def random_cpu(self):
+        possible_moves = [x for x, space in enumerate(self.master_board) if space == False]
+        return self.select_random(possible_moves)
 
-    def selectRandom(self, open_spots):
+    def select_random(self, open_spots):
         ln = len(open_spots)
         random_move = randrange(0 , ln)
         return open_spots[random_move]
@@ -193,7 +196,7 @@ class Game(GraphWin):
 
     def game(self):
         while True:
-            block = self.getBlock()
+            block = self.get_block()
 
             if self.master_board[block] == False:
                 self.master_board[block] = True
@@ -206,7 +209,8 @@ class Game(GraphWin):
                     self.score[0] += 1
                     break
                 if self.master_board == self.true_board:
-                    Text(Point(201,100), "It's a Draw").draw(self)
+                    Text(Point(201,100), "It's a Draw")
+                    self.score[2]+=1
                     break
                 
                 computer_move = self.cpu_move()
@@ -218,10 +222,6 @@ class Game(GraphWin):
                     Text(Point(201,100), "O Wins!!!").draw(self)
                     self.score[1] += 1
                     break
-            #If the master board is full, the game ends in a draw
-            if self.master_board == self.true_board:
-                Text(Point(201,100), "It's a Draw")
-                break
 
     def play_game(self):
         play_again = 'y'
@@ -229,16 +229,57 @@ class Game(GraphWin):
         while play_again == 'y' or play_again == 'Y':
             self.board()
             self.game()
-            self.clear()
-            Text(Point(201,201), f'{self.score[0]} - {self.score[1]}').draw(self)
+            Text(Point(201,201), f'{self.score[0]} - {self.score[1]} \n Draws: {self.score[2]}').draw(self)
             Text(Point(201,170), f'Press Y to play again, anything else to quit...').draw(self)
 
             play_again = self.getKey()
             
             self.clear()
-            self.true_board = [True] * 9
             self.boardX = [False] * 9
             self.boardO = [False] * 9
             self.master_board = [False] * 9
-
         
+        self.score = [0] * 3
+
+    def simulate(self, games):
+        for i in range(games):
+            while True:
+                _moveX = self.random_cpu()
+                self.boardX[_moveX] = True
+                self.master_board[_moveX] = True
+
+                if self.win_condition(self.boardX):
+                    self.score[0] += 1
+                    self.boardX = [False] * 9
+                    self.boardO = [False] * 9
+                    self.master_board = [False] * 9
+                    break
+
+                if self.master_board == self.true_board:
+                    self.score[2]+=1
+                    self.boardX = [False] * 9
+                    self.boardO = [False] * 9
+                    self.master_board = [False] * 9
+                    break
+
+                _moveO = self.random_cpu()
+                self.boardO[_moveO] = True
+                self.master_board[_moveO] = True
+
+                if self.win_condition(self.boardO):
+                    self.score[1] += 1
+                    self.boardX = [False] * 9
+                    self.boardO = [False] * 9
+                    self.master_board = [False] * 9
+                    break
+        
+        Text(Point(201,201), f'{self.score[0]} - {self.score[1]} \n Draws: {self.score[2]}').draw(self)
+        Text(Point(201,170), 'Press anything to continue...').draw(self)
+
+        self.getKey()
+
+        self.boardX = [False] * 9
+        self.boardO = [False] * 9
+        self.master_board = [False] * 9
+        self.score = [0] * 3
+      
