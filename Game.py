@@ -282,4 +282,33 @@ class Game(GraphWin):
         self.boardO = [False] * 9
         self.master_board = [False] * 9
         self.score = [0] * 3
+
+    def menu(self):
+        menu_text = Text(
+            Point(201, 201), """Hello!!! 
+                                \nPress 0 to do simulation  
+                                \nPress 1 to play the game. 
+                                \nPress 2 to exit"""
+            )
+        menu_text.draw(self)
+
+        while True:
+            key_check = self.checkKey()
+
+            if key_check == '0':
+                self.clear()
+                self.simulate(1000)
+                self.clear()
+                menu_text.draw(self)
+                
+
+            elif key_check == '1':
+                self.clear()
+                self.play_game()
+                menu_text.draw(self)
+
+            elif key_check == '2':
+                break
+
+        self.close()
       
